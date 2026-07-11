@@ -24,7 +24,7 @@ Expone el núcleo del compilador de Forja (léxico, parseo, ejecución en VM) co
 # Requiere wasm-pack o wasm-bindgen
 cargo build --package forja-wasm --target wasm32-unknown-unknown --release
 wasm-bindgen target/wasm32-unknown-unknown/release/forja_wasm.wasm --out-dir wasm-output --target web
-wasm-opt -O3 wasm-output/forja_wasm_bg.wasm -o wasm-output/forja_wasm_bg.wasm
+wasm-opt --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext -O3 wasm-output/forja_wasm_bg.wasm -o wasm-output/forja_wasm_bg.wasm
 ```
 
 ## Dependencias
