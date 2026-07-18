@@ -19,8 +19,7 @@ pub fn compilar(codigo: &str) -> String {
 /// Compila y ejecuta código Forja en la VM, devolviendo el output
 #[wasm_bindgen]
 pub fn forja_ejecutar(source: &str) -> Result<String, JsError> {
-    let output = forja::ejecutar(source)
-        .map_err(|e| JsError::new(&e))?;
+    let output = forja::ejecutar(source).map_err(|e| JsError::new(&e))?;
     Ok(output.join("\n"))
 }
 
@@ -28,21 +27,32 @@ pub fn forja_ejecutar(source: &str) -> Result<String, JsError> {
 #[wasm_bindgen]
 pub fn obtener_ejemplos() -> String {
     let ejemplos = vec![
-        ("Hola Mundo", r#"importar "std/io"
-escribir("¡Hola, Mundo!")"#),
-        ("Variables", r#"importar "std/io"
+        (
+            "Hola Mundo",
+            r#"importar "std/io"
+escribir("¡Hola, Mundo!")"#,
+        ),
+        (
+            "Variables",
+            r#"importar "std/io"
 variable nombre = "Ana"
 variable edad = 25
-escribir("Me llamo " + nombre + " y tengo " + edad + " años")"#),
-        ("Funciones", r#"importar "std/io"
+escribir("Me llamo " + nombre + " y tengo " + edad + " años")"#,
+        ),
+        (
+            "Funciones",
+            r#"importar "std/io"
 funcion fibonacci(n) {
     si (n <= 1) { retornar n }
     retornar fibonacci(n - 1) + fibonacci(n - 2)
 }
 para i = 0 mientras i < 10 {
     escribir(fibonacci(i))
-}"#),
-        ("Clases", r#"importar "std/io"
+}"#,
+        ),
+        (
+            "Clases",
+            r#"importar "std/io"
 clase Persona {
     nombre
     constructor(nombre) {
@@ -53,19 +63,28 @@ clase Persona {
     }
 }
 variable p = nuevo Persona("Ana")
-p.saludar()"#),
-        ("String Interpolation", r#"importar "std/io"
+p.saludar()"#,
+        ),
+        (
+            "String Interpolation",
+            r#"importar "std/io"
 variable nombre = "Carlos"
 variable edad = 30
-escribir("Hola ${nombre}, tenés ${edad} años")"#),
-        ("Resultado/Option", r#"importar "std/io"
+escribir("Hola ${nombre}, tenés ${edad} años")"#,
+        ),
+        (
+            "Resultado/Option",
+            r#"importar "std/io"
 funcion dividir(a: Entero, b: Entero) -> Resultado<Entero, Texto> {
     si (b == 0) { retornar Error("No se puede dividir por cero") }
     retornar Ok(a / b)
 }
 variable resultado = dividir(10, 2)?
-escribir(resultado)"#),
-        ("Rasgos", r#"importar "std/io"
+escribir(resultado)"#,
+        ),
+        (
+            "Rasgos",
+            r#"importar "std/io"
 rasgo Saludador {
     funcion saludar()
 }
@@ -79,32 +98,47 @@ implementa Saludador para Persona {
     }
 }
 variable p = nuevo Persona("Ana")
-p.saludar()"#),
-        ("Genéricos", r#"importar "std/io"
+p.saludar()"#,
+        ),
+        (
+            "Genéricos",
+            r#"importar "std/io"
 funcion identidad<T>(valor: T) -> T {
     retornar valor
 }
 escribir(identidad(42))
-escribir(identidad("hola"))"#),
-        ("Concurrencia", r#"importar "std/io"
+escribir(identidad("hola"))"#,
+        ),
+        (
+            "Concurrencia",
+            r#"importar "std/io"
 variable tx, rx = canal()
 variable h = hilo {
     tx.enviar(42)
 }
 variable dato = rx.recibir()
 escribir(dato)
-h.unir()"#),
-        ("Input de usuario", r#"importar "std/io"
+h.unir()"#,
+        ),
+        (
+            "Input de usuario",
+            r#"importar "std/io"
 variable nombre = leer("¿Cómo te llamas? ")
-escribir("Hola, " + nombre + "!")"#),
-        ("Fibonacci recursivo", r#"importar "std/io"
+escribir("Hola, " + nombre + "!")"#,
+        ),
+        (
+            "Fibonacci recursivo",
+            r#"importar "std/io"
 funcion fib(n) {
     si (n < 2) { retornar n }
     retornar fib(n-1) + fib(n-2)
 }
 variable n = 10
-escribir("fib(" + n + ") = " + fib(n))"#),
-        ("Números primos", r#"importar "std/io"
+escribir("fib(" + n + ") = " + fib(n))"#,
+        ),
+        (
+            "Números primos",
+            r#"importar "std/io"
 funcion es_primo(n) {
     si (n < 2) { retornar falso }
     variable i = 2
@@ -118,7 +152,8 @@ para i = 1 mientras i <= 20 {
     si (es_primo(i)) {
         escribir(i + " es primo")
     }
-}"#),
+}"#,
+        ),
     ];
     serde_json::to_string(&ejemplos).unwrap()
 }
@@ -148,15 +183,21 @@ pub fn version() -> String {
 #[wasm_bindgen]
 pub fn forja_tokenizar(source: &str) -> Result<String, JsError> {
     let mut lexer = forja::lexer::Lexer::new(source);
-    let tokens = lexer.tokenize()
-        .map_err(|errors| {
-            let msgs: Vec<String> = errors.iter().map(|e| e.to_string()).collect();
-            JsError::new(&msgs.join("\n"))
-        })?;
+    let tokens = lexer.tokenize().map_err(|errors| {
+        let msgs: Vec<String> = errors.iter().map(|e| e.to_string()).collect();
+        JsError::new(&msgs.join("\n"))
+    })?;
 
-    let json = tokens.iter().map(|t| {
-        format!(r#"{{"kind":"{}","linea":{},"columna":{}}}"#, t.kind, t.linea, t.columna)
-    }).collect::<Vec<_>>().join(",\n  ");
+    let json = tokens
+        .iter()
+        .map(|t| {
+            format!(
+                r#"{{"kind":"{}","linea":{},"columna":{}}}"#,
+                t.kind, t.linea, t.columna
+            )
+        })
+        .collect::<Vec<_>>()
+        .join(",\n  ");
 
     Ok(format!("[\n  {}\n]", json))
 }

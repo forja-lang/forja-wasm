@@ -134,7 +134,7 @@ dependencies = [
 
 [[package]]
 name = "forja"
-version = "0.8.3"
+version = "0.8.5"
 dependencies = [
  "rustyline",
  "serde",
@@ -146,7 +146,7 @@ dependencies = [
 
 [[package]]
 name = "forja-wasm"
-version = "0.8.3"
+version = "0.8.5"
 dependencies = [
  "forja",
  "serde",
@@ -749,7 +749,7 @@ dependencies = [
 
 [[package]]
 name = "tinystr"
-version = "0.8.3"
+version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c8323304221c2a851516f22236c5722a72eaa19749016521d6dff0824447d96d"
 dependencies = [
@@ -1155,7 +1155,7 @@ checksum = "1ffae5123b2d3fc086436f8834ae3ab053a283cfac8fe0a0b8eaae044768a4c4"
 
 [[package]]
 name = "yoke"
-version = "0.8.3"
+version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "709fe23a0424b6a435d82152b1bd3fdfb0833487d5fa90d05d42762a9891fef5"
 dependencies = [
