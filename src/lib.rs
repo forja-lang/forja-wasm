@@ -29,19 +29,19 @@ pub fn obtener_ejemplos() -> String {
     let ejemplos = vec![
         (
             "Hola Mundo",
-            r#"importar "std/io"
+            r#"importar std/io
 escribir("¡Hola, Mundo!")"#,
         ),
         (
             "Variables",
-            r#"importar "std/io"
+            r#"importar std/io
 variable nombre = "Ana"
 variable edad = 25
 escribir("Me llamo " + nombre + " y tengo " + edad + " años")"#,
         ),
         (
             "Funciones",
-            r#"importar "std/io"
+            r#"importar std/io
 funcion fibonacci(n) {
     si (n <= 1) { retornar n }
     retornar fibonacci(n - 1) + fibonacci(n - 2)
@@ -52,7 +52,7 @@ para i = 0 mientras i < 10 {
         ),
         (
             "Clases",
-            r#"importar "std/io"
+            r#"importar std/io
 clase Persona {
     nombre
     constructor(nombre) {
@@ -67,14 +67,14 @@ p.saludar()"#,
         ),
         (
             "String Interpolation",
-            r#"importar "std/io"
+            r#"importar std/io
 variable nombre = "Carlos"
 variable edad = 30
 escribir("Hola ${nombre}, tenés ${edad} años")"#,
         ),
         (
             "Resultado/Option",
-            r#"importar "std/io"
+            r#"importar std/io
 funcion dividir(a: Entero, b: Entero) -> Resultado<Entero, Texto> {
     si (b == 0) { retornar Error("No se puede dividir por cero") }
     retornar Ok(a / b)
@@ -84,7 +84,7 @@ escribir(resultado)"#,
         ),
         (
             "Rasgos",
-            r#"importar "std/io"
+            r#"importar std/io
 rasgo Saludador {
     funcion saludar()
 }
@@ -102,7 +102,7 @@ p.saludar()"#,
         ),
         (
             "Genéricos",
-            r#"importar "std/io"
+            r#"importar std/io
 funcion identidad<T>(valor: T) -> T {
     retornar valor
 }
@@ -111,7 +111,7 @@ escribir(identidad("hola"))"#,
         ),
         (
             "Concurrencia",
-            r#"importar "std/io"
+            r#"importar std/io
 variable tx, rx = canal()
 variable h = hilo {
     tx.enviar(42)
@@ -122,13 +122,13 @@ h.unir()"#,
         ),
         (
             "Input de usuario",
-            r#"importar "std/io"
+            r#"importar std/io
 variable nombre = leer("¿Cómo te llamas? ")
 escribir("Hola, " + nombre + "!")"#,
         ),
         (
             "Fibonacci recursivo",
-            r#"importar "std/io"
+            r#"importar std/io
 funcion fib(n) {
     si (n < 2) { retornar n }
     retornar fib(n-1) + fib(n-2)
@@ -138,7 +138,7 @@ escribir("fib(" + n + ") = " + fib(n))"#,
         ),
         (
             "Números primos",
-            r#"importar "std/io"
+            r#"importar std/io
 funcion es_primo(n) {
     si (n < 2) { retornar falso }
     variable i = 2
