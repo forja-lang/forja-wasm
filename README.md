@@ -18,7 +18,7 @@ Expone el núcleo del compilador de Forja (léxico, parseo, ejecución en VM) co
 | `obtener_ejemplos()` | Devuelve ejemplos precargados como JSON |
 | `version()` | Versión del compilador |
 
-## Build
+## Compilación
 
 ```bash
 # Requiere wasm-pack o wasm-bindgen
