@@ -1,6 +1,6 @@
 [package]
 name = "forja-wasm"
-version = "0.8.8"
+version = "9.0.0"
 edition = "2021"
 description = "Forja compiler core compiled to WebAssembly"
 
