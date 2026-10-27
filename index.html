@@ -238,7 +238,16 @@ escribir("¡Hola, Forja!")</textarea>
 
     <!-- WASM module -->
     <script type="module">
-        import init, { compilar, forja_ejecutar, obtener_ejemplos, decodificar_url, codificar_url, version, forja_tokenizar } from './pkg/forja_wasm.js';
+        // F2-T2: el módulo WASM puede vivir en `./pkg/` (build local con
+        // wasm-pack) o en `./wasm/` (copia de deploy en docs/public/wasm).
+        // Se intenta primero `./pkg/` y se cae a `./wasm/` si no existe.
+        let wasmModule;
+        try {
+            wasmModule = await import('./pkg/forja_wasm.js');
+        } catch (e) {
+            wasmModule = await import('./wasm/forja_wasm.js');
+        }
+        const { default: init, compilar, forja_ejecutar, obtener_ejemplos, decodificar_url, codificar_url, version, forja_tokenizar } = wasmModule;
 
         // --- DOM refs ---
         const editor = document.getElementById('editor');
