@@ -4,10 +4,11 @@
 
 use wasm_bindgen::prelude::*;
 
-/// Compila código Forja a Rust (transpilación)
+/// Transpila código Forja a Rust (transpilación; la API WASM conserva el
+/// nombre `compilar` por compatibilidad con el JS existente).
 #[wasm_bindgen]
 pub fn compilar(codigo: &str) -> String {
-    match forja::compilar(codigo) {
+    match forja::transpilar_a_rust(codigo) {
         Ok(rust_code) => rust_code,
         Err(errors) => {
             let msgs: Vec<String> = errors.iter().map(|e| e.to_string()).collect();
@@ -46,7 +47,7 @@ funcion fibonacci(n) {
     si (n <= 1) { retornar n }
     retornar fibonacci(n - 1) + fibonacci(n - 2)
 }
-para i = 0 mientras i < 10 {
+para (variable i = 0; i < 10; i = i + 1) {
     escribir(fibonacci(i))
 }"#,
         ),
@@ -79,8 +80,12 @@ funcion dividir(a: Entero, b: Entero) -> Resultado<Entero, Texto> {
     si (b == 0) { retornar Error("No se puede dividir por cero") }
     retornar Ok(a / b)
 }
-variable resultado = dividir(10, 2)?
-escribir(resultado)"#,
+funcion ejecutar() -> Resultado<Entero, Texto> {
+    variable resultado = dividir(10, 2)?
+    escribir(resultado)
+    retornar Ok(resultado)
+}
+ejecutar()"#,
         ),
         (
             "Rasgos",
@@ -142,17 +147,96 @@ escribir("fib(" + n + ") = " + fib(n))"#,
 funcion es_primo(n) {
     si (n < 2) { retornar falso }
     variable i = 2
-    mientras i * i <= n {
+    mientras (i * i <= n) {
         si (n % i == 0) { retornar falso }
         i = i + 1
     }
     retornar verdadero
 }
-para i = 1 mientras i <= 20 {
+para (variable i = 1; i <= 20; i = i + 1) {
     si (es_primo(i)) {
         escribir(i + " es primo")
     }
 }"#,
+        ),
+        (
+            "Arreglos",
+            r#"importar std/io
+variable numeros = [3, 1, 4, 1, 5, 9, 2, 6]
+variable suma = 0
+para (variable i = 0; i < longitud(numeros); i = i + 1) {
+    suma = suma + numeros[i]
+}
+escribir("Suma: " + suma)
+escribir("Máximo: " + maximo(numeros))"#,
+        ),
+        (
+            "Mapas",
+            r#"importar std/io
+variable edades = {"Ana": 25, "Luis": 30, "Eva": 28}
+variable nombres = ["Ana", "Luis", "Eva"]
+para (variable i = 0; i < longitud(nombres); i = i + 1) {
+    variable nombre = nombres[i]
+    escribir(nombre + " tiene " + edades[nombre] + " años")
+}"#,
+        ),
+        (
+            "Enums y match",
+            r#"importar std/io
+tipo Forma = Circulo(Decimal) | Rectangulo(Decimal, Decimal)
+funcion area(f: Forma) -> Decimal {
+    coincidir (f) {
+        caso Circulo(r) -> { retornar 3.14159 * r * r }
+        caso Rectangulo(a, b) -> { retornar a * b }
+    }
+}
+escribir(area(Circulo(2.0)))
+escribir(area(Rectangulo(3.0, 4.0)))"#,
+        ),
+        (
+            "Ordenamiento burbuja",
+            r#"importar std/io
+variable arr = [5, 2, 9, 1, 7, 3]
+variable n = longitud(arr)
+para (variable i = 0; i < n; i = i + 1) {
+    para (variable j = 0; j < n - i - 1; j = j + 1) {
+        si (arr[j] > arr[j + 1]) {
+            variable tmp = arr[j]
+            arr[j] = arr[j + 1]
+            arr[j + 1] = tmp
+        }
+    }
+}
+escribir(arr)"#,
+        ),
+        (
+            "GUI: contador",
+            r#"importar std/io
+variable contador = 0
+funcion incrementar() {
+    contador = contador + 1
+}
+funcion main() {
+    columna {
+        titulo("Contador")
+        escribir("Valor: " + contador)
+        boton("Incrementar", incrementar)
+    }
+}"#,
+        ),
+        (
+            "JSON",
+            r#"importar std/io
+importar std/json
+funcion ejecutar() -> Resultado<Texto, ErrorJSON> {
+    variable datos = {"nombre": "Ana", "edad": 25, "activo": verdadero}
+    variable texto = serializar(datos)?
+    escribir(texto)
+    variable recuperado = parsear(texto)?
+    escribir(recuperado["nombre"])
+    retornar Ok(texto)
+}
+ejecutar()"#,
         ),
     ];
     serde_json::to_string(&ejemplos).unwrap()
