@@ -2,6 +2,7 @@
 // Expone el compilador de Forja como funciones WASM
 // con ejemplos, URL sharing y más
 
+use forja::error::limpiar_ansi;
 use wasm_bindgen::prelude::*;
 
 /// Transpila código Forja a Rust (transpilación; la API WASM conserva el
@@ -11,16 +12,20 @@ pub fn compilar(codigo: &str) -> String {
     match forja::transpilar_a_rust(codigo) {
         Ok(rust_code) => rust_code,
         Err(errors) => {
-            let msgs: Vec<String> = errors.iter().map(|e| e.to_string()).collect();
+            let msgs: Vec<String> = errors
+                .iter()
+                .map(|e| limpiar_ansi(&e.to_string()))
+                .collect();
             format!("Error: {}", msgs.join("\n"))
         }
     }
 }
 
-/// Compila y ejecuta código Forja en la VM, devolviendo el output
+/// Compila y ejecuta código Forja en la VM, devolviendo el output.
+/// El navegador no interpreta ANSI: los errores se devuelven sin color.
 #[wasm_bindgen]
 pub fn forja_ejecutar(source: &str) -> Result<String, JsError> {
-    let output = forja::ejecutar(source).map_err(|e| JsError::new(&e))?;
+    let output = forja::ejecutar(source).map_err(|e| JsError::new(&limpiar_ansi(&e)))?;
     Ok(output.join("\n"))
 }
 
