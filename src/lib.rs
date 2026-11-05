@@ -11,8 +11,17 @@ use wasm_bindgen::prelude::*;
 /// En WASM no hay filesystem, así que la caché incremental de disco no
 /// aplica; esta caché evita recompilar el mismo código en ejecuciones
 /// sucesivas del playground (que es el caso de uso dominante).
-static CACHE_BYTECODE: Mutex<Option<HashMap<u64, (Vec<forja::bytecode::Opcode>, Vec<forja::bytecode::ContratoBytecode>)>>> =
-    Mutex::new(None);
+static CACHE_BYTECODE: Mutex<
+    Option<
+        HashMap<
+            u64,
+            (
+                Vec<forja::bytecode::Opcode>,
+                Vec<forja::bytecode::ContratoBytecode>,
+            ),
+        >,
+    >,
+> = Mutex::new(None);
 
 fn hash_source(source: &str) -> u64 {
     use std::hash::{Hash, Hasher};
