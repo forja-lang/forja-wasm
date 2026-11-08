@@ -1,6 +1,6 @@
 [package]
 name = "forja-wasm"
-version = "0.9.7"
+version = "0.10.0"
 edition = "2021"
 description = "Forja compiler core compiled to WebAssembly"
 authors = ["forja-lang"]
@@ -21,7 +21,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 urlencoding = "2"
 
-forja = { path = "../.." }
+forja = { path = "../../compiler/forja" }
 
 [package.metadata]
 # habilitar wasm-opt para reducir el tamaño del binario.
