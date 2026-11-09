@@ -82,7 +82,7 @@ pub fn forja_ejecutar(source: &str) -> Result<String, JsError> {
         (bc, ct)
     };
 
-    let mut vm = ForjaFast::new();
+    let mut vm = ForjaFast::nuevo();
     #[cfg(target_pointer_width = "64")]
     vm.fijar_max_inst(10_000_000_000);
     #[cfg(not(target_pointer_width = "64"))]
