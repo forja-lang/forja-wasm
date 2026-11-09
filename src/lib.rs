@@ -23,10 +23,10 @@ static CACHE_BYTECODE: Mutex<
     >,
 > = Mutex::new(None);
 
-fn hash_source(source: &str) -> u64 {
+fn hash_fuente(fuente: &str) -> u64 {
     use std::hash::{Hash, Hasher};
     let mut hasher = std::collections::hash_map::DefaultHasher::new();
-    source.hash(&mut hasher);
+    fuente.hash(&mut hasher);
     hasher.finish()
 }
 
@@ -49,15 +49,15 @@ pub fn compilar(codigo: &str) -> String {
 /// Compila y ejecuta código Forja en la VM, devolviendo el output.
 /// El navegador no interpreta ANSI: los errores se devuelven sin color.
 #[wasm_bindgen]
-pub fn forja_ejecutar(source: &str) -> Result<String, JsError> {
+pub fn forja_ejecutar(fuente: &str) -> Result<String, JsError> {
     use forja::vm_fast::ForjaFast;
 
     // 1. Intentar cache hit
-    let source_hash = hash_source(source);
+    let fuente_hash = hash_fuente(fuente);
     let cached = {
         let guard = CACHE_BYTECODE.lock().unwrap();
-        if let Some(map) = guard.as_ref() {
-            map.get(&source_hash).cloned()
+        if let Some(mapa) = guard.as_ref() {
+            mapa.get(&fuente_hash).cloned()
         } else {
             None
         }
@@ -67,17 +67,17 @@ pub fn forja_ejecutar(source: &str) -> Result<String, JsError> {
         (bc, ct)
     } else {
         // Cache miss: compilar normalmente (resuelve imports embebidos)
-        let (bc, ct) = forja::compilar_pipeline_completa(source)
+        let (bc, ct) = forja::compilar_pipeline_completa(fuente)
             .map_err(|e| JsError::new(&limpiar_ansi(&e)))?;
         // Guardar en caché
         {
             let mut guard = CACHE_BYTECODE.lock().unwrap();
-            let map = guard.get_or_insert_with(HashMap::new);
+            let mapa = guard.get_or_insert_with(HashMap::new);
             // Limitar tamaño del caché a 64 entradas
-            if map.len() >= 64 {
-                map.clear();
+            if mapa.len() >= 64 {
+                mapa.clear();
             }
-            map.insert(source_hash, (bc.clone(), ct.clone()));
+            mapa.insert(fuente_hash, (bc.clone(), ct.clone()));
         }
         (bc, ct)
     };
