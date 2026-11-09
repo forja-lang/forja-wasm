@@ -84,13 +84,13 @@ pub fn forja_ejecutar(source: &str) -> Result<String, JsError> {
 
     let mut vm = ForjaFast::new();
     #[cfg(target_pointer_width = "64")]
-    vm.set_max_inst(10_000_000_000);
+    vm.fijar_max_inst(10_000_000_000);
     #[cfg(not(target_pointer_width = "64"))]
-    vm.set_max_inst(2_000_000_000);
+    vm.fijar_max_inst(2_000_000_000);
     vm.contratos = contratos;
     vm.verificar_contratos = true;
     vm.cargar_bytecode(bytecode);
     vm.ejecutar()
         .map_err(|e| JsError::new(&limpiar_ansi(&format!("{}", e))))?;
-    Ok(vm.obtener_output().to_vec().join("\n"))
+    Ok(vm.obtener_salida().to_vec().join("\n"))
 }
